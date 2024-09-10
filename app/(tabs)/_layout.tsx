@@ -2,6 +2,8 @@ import React from 'react'
 import {Tabs} from 'expo-router'
 import Entypo from '@expo/vector-icons/Entypo';
 import AntDesign from '@expo/vector-icons/AntDesign';
+import Feather from '@expo/vector-icons/Feather';
+import Octicons from '@expo/vector-icons/Octicons';
 
 export default function _layout() {
   return (
@@ -14,7 +16,7 @@ export default function _layout() {
             name='home'
             options={{
                 title:'home',
-                tabBarIcon: ({ color }) => (<Entypo name="home" size={24} color="black" />)
+                tabBarIcon: ({ color }) => (<Octicons name="home" size={24} color="black" />)
             }}
         />
         <Tabs.Screen
@@ -35,14 +37,14 @@ export default function _layout() {
             name='reels'
             options={{
                 title:'reels',
-                tabBarIcon: ({ color }) => (<Entypo name="video" size={24} color="black" />)
+                tabBarIcon: ({ color }) => (<Feather name="video" size={24} color="black" />)
             }}
         />
         <Tabs.Screen
             name='profile'
             options={{
                 title:'profile',
-                tabBarIcon: ({ color }) => (<AntDesign name="user" size={24} color="black" />)
+                tabBarIcon: ({ color }) => (<Feather name="user" size={24} color="black" />)
             }}
         />
     </Tabs>

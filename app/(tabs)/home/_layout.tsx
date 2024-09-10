@@ -1,6 +1,7 @@
 import { Link, Stack } from "expo-router";
-import { Button, View } from "react-native";
+import { View } from "react-native";
 import AntDesign from '@expo/vector-icons/AntDesign';
+import { Text } from 'react-native';
 
 export default function RootLayout() {
   return (
@@ -8,7 +9,15 @@ export default function RootLayout() {
       <Stack.Screen
         name="index"
         options={{
-          title: "Instagram",
+          title: "",
+          headerLeft: () => (
+            <Text
+              style ={{
+                fontSize: 35,
+                fontWeight: "bold"
+              }}
+            >Instagram</Text>
+          ),
           headerRight: () => (
             <View style={{ flexDirection: "row"}}>
               <Link href="/(tabs)/home/notifications" style={{paddingRight: 10}} asChild>
