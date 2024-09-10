@@ -7,9 +7,7 @@ export default function RootLayout() {
         headerShown: false
       }}
     >
-      <Stack.Screen name="index" options={{title : 'Inicio'}}/>
-      <Stack.Screen name="signin" options={{title : 'Sign In'}}/>
-      <Stack.Screen name="(tabs)"/>
+      <Stack.Screen name="index"/>
     </Stack>
   );
 }

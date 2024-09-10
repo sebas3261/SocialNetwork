@@ -1,26 +1,27 @@
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, Keyboard, Button } from 'react-native'
+import { View, Text, TouchableWithoutFeedback, Keyboard, TextInput, StyleSheet, TouchableOpacity, Button } from 'react-native'
 import React from 'react'
 import { Link } from 'expo-router'
 
-export default function signin() {
+export default function signup() {
   const [user, onChangeUser] = React.useState("")
   const [password, onChangePasword] = React.useState("")
+  const [repassword, onChangerePasword] = React.useState("")
   
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View
-          style={{
-              flex: 1,
-              justifyContent: "center",
-              alignItems: "center",
-          }}
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+        }}
       >
         <Text
-          style={{
-            fontSize: 50,
-            marginBottom: 80
-          }}
-        >Instagram</Text>
+        style={{
+          fontSize: 45,
+          marginBottom: 50
+        }}
+        >Create an acount</Text>
         <TextInput
           style={styles.input}
           placeholder='user:'
@@ -35,18 +36,23 @@ export default function signin() {
           onChangeText={onChangePasword}
           value={password}
         />
-        <Link href={"/(tabs)/home"} asChild>
+        <TextInput
+          style={styles.input}
+          placeholder='repeat pasword:'
+          placeholderTextColor="gray" 
+          onChangeText={onChangerePasword}
+          value={repassword}
+        />
+        <Link href={"/signup/userdata"} asChild>
           <TouchableOpacity style={styles.button}>
-            <Text style={styles.buttonText}>Sign in</Text>
+            <Text style={styles.buttonText}>Continue</Text>
           </TouchableOpacity>
         </Link>
-        <Text>-or-</Text>
-        <Link href={"/signup"} asChild>
-          <Button
-            title='Create an acount'
-          />
+        <Link href={"/signin"} asChild>
+          <Button title="Already have an acount?"/>
         </Link>
       </View>
+      
     </TouchableWithoutFeedback>
   )
 }
@@ -74,4 +80,3 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
 });
-

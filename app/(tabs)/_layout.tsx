@@ -1,41 +1,48 @@
 import React from 'react'
 import {Tabs} from 'expo-router'
 import Entypo from '@expo/vector-icons/Entypo';
+import AntDesign from '@expo/vector-icons/AntDesign';
 
 export default function _layout() {
   return (
-    <Tabs>
+    <Tabs
+        screenOptions={{
+            headerShown: false
+        }}
+    >
         <Tabs.Screen
             name='home'
             options={{
-                title:'home'
+                title:'home',
+                tabBarIcon: ({ color }) => (<Entypo name="home" size={24} color="black" />)
             }}
         />
         <Tabs.Screen
             name='search'
             options={{
-                title:'search'
+                title:'search',
+                tabBarIcon: ({ color }) => (<Entypo name="magnifying-glass" size={24} color="black" />)
             }}
         />
         <Tabs.Screen
             name='newPost'
             options={{
-                title:'new post'
+                title:'new post',
+                tabBarIcon: ({ color }) => (<AntDesign name="pluscircleo" size={24} color="black" />)
             }}
         />
          <Tabs.Screen
             name='reels'
             options={{
                 title:'reels',
-                tabBarIcon: ({ color }) => (
-                    <Entypo name="video" size={24} color="black" />
-                )
+                tabBarIcon: ({ color }) => (<Entypo name="video" size={24} color="black" />)
             }}
         />
         <Tabs.Screen
             name='profile'
             options={{
-                title:'profile'
+                title:'profile',
+                tabBarIcon: ({ color }) => (<AntDesign name="user" size={24} color="black" />)
             }}
         />
     </Tabs>
