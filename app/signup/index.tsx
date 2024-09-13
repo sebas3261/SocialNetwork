@@ -1,11 +1,41 @@
-import { View, Text, TouchableWithoutFeedback, Keyboard, TextInput, StyleSheet, TouchableOpacity, Button } from 'react-native'
-import React from 'react'
-import { Link } from 'expo-router'
+import { View, Text, TouchableWithoutFeedback, Keyboard, TextInput, StyleSheet, TouchableOpacity, Button, Alert } from 'react-native'
+import React, { useContext } from 'react'
+import { Link, router } from 'expo-router'
+import { AuthContext } from '@/context/authContext/AuthContext'
 
 export default function signup() {
-  const [user, onChangeUser] = React.useState("")
+
+  const {signUp} = useContext(AuthContext)  
+  const [email, onChangeUser] = React.useState("")
   const [password, onChangePasword] = React.useState("")
   const [repassword, onChangerePasword] = React.useState("")
+
+  const verify= async()=>{
+    const regexEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const emailValido = regexEmail.test(email);
+    
+    // Validar contraseña con expresión regular
+    const regexContrasenaSegura = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
+    const contrasenaSegura = regexContrasenaSegura.test(password);
+    
+    // Si el correo o la contraseña no son válidos, mostrar alerta
+    if (!contrasenaSegura || !emailValido) {
+      Alert.alert("Error", "Email or password are not valid");
+      return;
+    }
+  
+    try {
+      // Intentar registrar al usuario
+      await signUp(email, password);
+      // Redirigir a la página de registro de datos de usuario
+      router.push("/signup/userdata");
+    } catch (error) {
+      // Manejar errores al intentar registrar
+      Alert.alert("Error", "Something went wrong signing up");
+    }
+
+  };
+  
   
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -24,30 +54,34 @@ export default function signup() {
         >Create an acount</Text>
         <TextInput
           style={styles.input}
-          placeholder='user:'
+          placeholder='email'
           placeholderTextColor="gray" 
           onChangeText={onChangeUser}
-          value={user}
+          value={email}
         />
         <TextInput
           style={styles.input}
-          placeholder='pasword:'
+          placeholder='pasword'
           placeholderTextColor="gray" 
           onChangeText={onChangePasword}
           value={password}
+          secureTextEntry
         />
         <TextInput
           style={styles.input}
-          placeholder='repeat pasword:'
+          placeholder='repeat pasword'
           placeholderTextColor="gray" 
           onChangeText={onChangerePasword}
           value={repassword}
+          secureTextEntry
         />
-        <Link href={"/signup/userdata"} asChild>
-          <TouchableOpacity style={styles.button}>
-            <Text style={styles.buttonText}>Continue</Text>
-          </TouchableOpacity>
-        </Link>
+        <TouchableOpacity 
+          style={styles.button}
+          onPress={verify}
+          disabled = {password !== repassword || !password || !repassword}
+          >
+          <Text style={styles.buttonText}>Continue</Text>
+        </TouchableOpacity>
         <Link href={"/signin"} asChild>
           <Button title="Already have an acount?"/>
         </Link>

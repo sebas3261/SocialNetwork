@@ -1,57 +1,80 @@
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, Keyboard, Button } from 'react-native'
-import React from 'react'
-import { Link } from 'expo-router'
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, Keyboard, Button, Alert } from 'react-native'
+import React, { useContext, useState } from 'react'
+import { useRouter } from 'expo-router'
+import { AuthContext } from '@/context/authContext/AuthContext'
 
-export default function signin() {
-  const [user, onChangeUser] = React.useState("")
-  const [password, onChangePasword] = React.useState("")
-  
+export default function Signin() {
+  const { login } = useContext(AuthContext);
+  const [user, setUser] = useState<string>("");
+  const [password, setPassword] = useState<string>(""); 
+  const router = useRouter(); 
+  const [loading, setLoading] = useState<boolean>(false); 
+
+  const handleSignIn = async () => {
+    if (!user || !password) {
+      Alert.alert("Error", "Please fill in all fields.");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      await login(user, password);
+      router.push("/(tabs)/home");
+    } catch (error) {
+      Alert.alert("Login Error", "Unable to sign in. Please check your credentials.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <View
-          style={{
-              flex: 1,
-              justifyContent: "center",
-              alignItems: "center",
-          }}
-      >
-        <Text
-          style={{
-            fontSize: 50,
-            marginBottom: 80
-          }}
-        >Instagram</Text>
+      <View style={styles.container}>
+        <Text style={styles.title}>Instagram</Text>
         <TextInput
           style={styles.input}
-          placeholder='user:'
-          placeholderTextColor="gray" 
-          onChangeText={onChangeUser}
+          placeholder='email'
+          placeholderTextColor="gray"
+          onChangeText={setUser}  
           value={user}
+          keyboardType="email-address"
+          autoCapitalize="none"
         />
         <TextInput
           style={styles.input}
-          placeholder='pasword:'
-          placeholderTextColor="gray" 
-          onChangeText={onChangePasword}
+          placeholder='password'
+          placeholderTextColor="gray"
+          onChangeText={setPassword}
           value={password}
+          secureTextEntry
         />
-        <Link href={"/(tabs)/home"} asChild>
-          <TouchableOpacity style={styles.button}>
-            <Text style={styles.buttonText}>Sign in</Text>
-          </TouchableOpacity>
-        </Link>
+        <TouchableOpacity
+          style={[styles.button, loading && styles.buttonDisabled]} 
+          onPress={handleSignIn} 
+          disabled={loading} 
+        >
+          <Text style={styles.buttonText}>Sign in</Text>
+        </TouchableOpacity>
         <Text>-or-</Text>
-        <Link href={"/signup"} asChild>
-          <Button
-            title='Create an acount'
-          />
-        </Link>
+        <Button
+          title="Create an account"
+          onPress={() => router.push("/signup")}
+        />
       </View>
     </TouchableWithoutFeedback>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  title: {
+    fontSize: 50,
+    marginBottom: 80
+  },
   input: {
     borderRadius: 20,
     width: 300,
@@ -68,10 +91,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 10
   },
+  buttonDisabled: {
+    backgroundColor: '#B0C4DE',
+  },
   buttonText: {
     color: 'white',
     fontWeight: 'bold',
     fontSize: 16,
   },
 });
-

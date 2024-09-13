@@ -7,6 +7,7 @@ export default function userdata() {
   const [lastname, onChangeLastname] = React.useState("")
   const [number, onChangereNumber] = React.useState("")
   const [age, onChangeAge] = React.useState('');
+  const [user, onChangeUser] = React.useState('');
   
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -25,23 +26,30 @@ export default function userdata() {
         >Let us Know you...</Text>
         <TextInput
           style={styles.input}
-          placeholder='Name:'
+          placeholder='Name'
           placeholderTextColor="gray" 
           onChangeText={onChangeName}
           value={name}
         />
         <TextInput
           style={styles.input}
-          placeholder='last name:'
+          placeholder='last name'
           placeholderTextColor="gray" 
           onChangeText={onChangeLastname}
           value={lastname}
+        />
+         <TextInput
+          style={styles.input}
+          placeholder='user'
+          placeholderTextColor="gray" 
+          onChangeText={onChangeUser}
+          value={user}
         />
         <TextInput
           style={styles.input}
           onChangeText={onChangeAge}
           value={age}
-          placeholder="age:"
+          placeholder="age"
           placeholderTextColor="gray"
           keyboardType="numeric"
         />
@@ -49,7 +57,7 @@ export default function userdata() {
           style={styles.input}
           onChangeText={onChangereNumber}
           value={number}
-          placeholder="phone number:"
+          placeholder="phone number"
           placeholderTextColor="gray"
           keyboardType="numeric"
         />
