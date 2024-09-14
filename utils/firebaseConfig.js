@@ -1,21 +1,24 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
+import { getFirestore } from "firebase/firestore";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "AIzaSyCRBAxWsJwh4Z5SuGa84zg-xM3c3RzC15c",
-  authDomain: "socialnetwork-27963.firebaseapp.com",
-  projectId: "socialnetwork-27963",
-  storageBucket: "socialnetwork-27963.appspot.com",
-  messagingSenderId: "651710200137",
-  appId: "1:651710200137:web:917470cd53364d9846c298",
-  measurementId: "G-6CQLZ92PST"
+  apiKey: "AIzaSyChsPzIR7qe_qWytgFicKpSLYnm87nieeY",
+  authDomain: "instaclon-17a1f.firebaseapp.com",
+  projectId: "instaclon-17a1f",
+  storageBucket: "instaclon-17a1f.appspot.com",
+  messagingSenderId: "879820613003",
+  appId: "1:879820613003:web:4e3c0271f1e0edf6bffb8e",
+  measurementId: "G-6FG9BNMH7R"
 };
 
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
-export const analytics = getAnalytics(app);
+export const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+
+export const db = getFirestore(app);

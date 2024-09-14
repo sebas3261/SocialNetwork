@@ -1,6 +1,7 @@
 import { View, Text, TouchableWithoutFeedback, Keyboard, TextInput, StyleSheet, TouchableOpacity, Button } from 'react-native'
-import React from 'react'
+import React, { useContext } from 'react'
 import { Link } from 'expo-router'
+import { AuthContext } from '@/context/authContext/AuthContext'
 
 export default function userdata() {
   const [name, onChangeName] = React.useState("")
@@ -8,6 +9,7 @@ export default function userdata() {
   const [number, onChangereNumber] = React.useState("")
   const [age, onChangeAge] = React.useState('');
   const [user, onChangeUser] = React.useState('');
+  const {update} = useContext(AuthContext) 
   
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -62,7 +64,15 @@ export default function userdata() {
           keyboardType="numeric"
         />
         <Link href={"/(tabs)/home"} asChild>
-          <TouchableOpacity style={styles.button}>
+          <TouchableOpacity style={styles.button}
+            onPress={()=>update({
+              name,
+              lastname,
+              phone: Number(number),
+              age: Number(age),
+              username: user
+            })}
+          >
             <Text style={styles.buttonText}>Sign up</Text>
           </TouchableOpacity>
         </Link>

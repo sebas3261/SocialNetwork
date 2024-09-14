@@ -1,4 +1,4 @@
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, Keyboard, Button, Alert } from 'react-native'
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, Keyboard, Button, Alert, ScrollView } from 'react-native'
 import React, { useContext, useState } from 'react'
 import { useRouter } from 'expo-router'
 import { AuthContext } from '@/context/authContext/AuthContext'
@@ -28,40 +28,48 @@ export default function Signin() {
   };
 
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={styles.container}>
-        <Text style={styles.title}>Instagram</Text>
-        <TextInput
-          style={styles.input}
-          placeholder='email'
-          placeholderTextColor="gray"
-          onChangeText={setUser}  
-          value={user}
-          keyboardType="email-address"
-          autoCapitalize="none"
-        />
-        <TextInput
-          style={styles.input}
-          placeholder='password'
-          placeholderTextColor="gray"
-          onChangeText={setPassword}
-          value={password}
-          secureTextEntry
-        />
-        <TouchableOpacity
-          style={[styles.button, loading && styles.buttonDisabled]} 
-          onPress={handleSignIn} 
-          disabled={loading} 
+        <ScrollView
+          style={{
+            flex:1
+          }}
+          contentContainerStyle = {{flexGrow:1, gap:70, justifyContent:"center"}}
+          nestedScrollEnabled={true}
         >
-          <Text style={styles.buttonText}>Sign in</Text>
-        </TouchableOpacity>
-        <Text>-or-</Text>
-        <Button
-          title="Create an account"
-          onPress={() => router.push("/signup")}
-        />
+          <View style={styles.container}>
+          <Text style={styles.title}>Instagram</Text>
+          <TextInput
+            style={styles.input}
+            placeholder='email'
+            placeholderTextColor="gray"
+            onChangeText={setUser}  
+            value={user}
+            keyboardType="email-address"
+            autoCapitalize="none"
+          />
+          <TextInput
+            style={styles.input}
+            placeholder='password'
+            placeholderTextColor="gray"
+            onChangeText={setPassword}
+            value={password}
+            secureTextEntry
+          />
+          <TouchableOpacity
+            style={[styles.button]} 
+            onPress={handleSignIn} 
+            disabled={loading} 
+          >
+            <Text style={styles.buttonText}>Sign in</Text>
+          </TouchableOpacity>
+          <Text>-or-</Text>
+          <Button
+            title="Create an account"
+            onPress={() => router.push("/signup")}
+          />
+          </View>
+        </ScrollView>
       </View>
-    </TouchableWithoutFeedback>
   );
 }
 
