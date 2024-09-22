@@ -1,97 +1,155 @@
-import { View, Text, TouchableWithoutFeedback, Keyboard, TextInput, StyleSheet, TouchableOpacity, Button, Alert } from 'react-native'
-import React, { useContext } from 'react'
+import { View, Text, TouchableWithoutFeedback, Keyboard, TextInput, StyleSheet, TouchableOpacity, Button, Alert, Animated, Platform, useColorScheme } from 'react-native'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import { Link, router } from 'expo-router'
 import { AuthContext } from '@/context/authContext/AuthContext'
 
-export default function signup() {
+export default function Signup() {
 
-  const {signUp} = useContext(AuthContext)  
+  const { signUp } = useContext(AuthContext)  
   const [email, onChangeUser] = React.useState("")
-  const [password, onChangePasword] = React.useState("")
-  const [repassword, onChangerePasword] = React.useState("")
+  const [password, onChangePassword] = React.useState("")
+  const [repassword, onChangeRePassword] = React.useState("")
 
-  const verify= async()=>{
+  const colorScheme = useColorScheme();
+  const [theme, setTheme] = useState<boolean>(false);
+  
+  const animatedMarginBottom = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    setTheme(colorScheme === "dark");
+  }, [colorScheme]);
+
+  useEffect(() => {
+    const keyboardShowListener = Keyboard.addListener(
+      Platform.OS === 'ios' ? 'keyboardWillShow' : 'keyboardDidShow',
+      (event) => {
+        animateMarginBottom(event.endCoordinates.height);
+      }
+    );
+    const keyboardHideListener = Keyboard.addListener(
+      Platform.OS === 'ios' ? 'keyboardWillHide' : 'keyboardDidHide',
+      () => {
+        animateMarginBottom(0);
+      }
+    );
+
+    return () => {
+      keyboardShowListener.remove();
+      keyboardHideListener.remove();
+    };
+  }, []);
+
+  const animateMarginBottom = (toValue: number) => {
+    Animated.timing(animatedMarginBottom, {
+      toValue,
+      duration: 300,
+      useNativeDriver: false,
+    }).start();
+  };
+
+  const verify = async () => {
     const regexEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const emailValido = regexEmail.test(email);
     
-    // Validar contraseña con expresión regular
     const regexContrasenaSegura = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
     const contrasenaSegura = regexContrasenaSegura.test(password);
     
-    // Si el correo o la contraseña no son válidos, mostrar alerta
     if (!contrasenaSegura || !emailValido) {
       Alert.alert("Error", "Email or password are not valid");
       return;
     }
-  
+
     try {
-      // Intentar registrar al usuario
       await signUp(email, password);
-      // Redirigir a la página de registro de datos de usuario
       router.push("/signup/userdata");
     } catch (error) {
-      // Manejar errores al intentar registrar
       Alert.alert("Error", "Something went wrong signing up");
     }
-
   };
-  
+
+  const dynamicStyle = {
+    background: {
+      backgroundColor: theme ? 'black' : 'white',
+      padding: 20,
+      borderRadius: 10,
+      flex: 1,
+    },
+    title: {
+      fontSize: 40,
+      marginBottom: 20,
+      color: theme? 'white' : 'black'
+    },
+    or: {
+      color: theme? 'white' : 'black',
+    },
+    input: {
+      borderRadius: 20,
+      width: 300,
+      height: 40,
+      margin: 12,
+      borderWidth: 1,
+      padding: 10,
+      borderColor: theme? 'white' : 'black',
+      color: theme? 'white' : 'black',
+    },
+  };
   
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <View
-        style={{
-          flex: 1,
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <Text
-        style={{
-          fontSize: 45,
-          marginBottom: 50
-        }}
-        >Create an acount</Text>
-        <TextInput
-          style={styles.input}
-          placeholder='email'
-          placeholderTextColor="gray" 
-          onChangeText={onChangeUser}
-          value={email}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder='pasword'
-          placeholderTextColor="gray" 
-          onChangeText={onChangePasword}
-          value={password}
-          secureTextEntry
-        />
-        <TextInput
-          style={styles.input}
-          placeholder='repeat pasword'
-          placeholderTextColor="gray" 
-          onChangeText={onChangerePasword}
-          value={repassword}
-          secureTextEntry
-        />
-        <TouchableOpacity 
-          style={styles.button}
-          onPress={verify}
-          disabled = {password !== repassword || !password || !repassword}
+      <View style={dynamicStyle.background}>
+        <Animated.View style={[styles.inner, { marginBottom: animatedMarginBottom }]}>
+          <Text style={dynamicStyle.title}>Create an account</Text>
+          <TextInput
+            style={dynamicStyle.input}
+            placeholder='email'
+            placeholderTextColor="gray" 
+            onChangeText={onChangeUser}
+            value={email}
+            autoCapitalize="none"
+          />
+          <TextInput
+            style={dynamicStyle.input}
+            placeholder='password'
+            placeholderTextColor="gray" 
+            onChangeText={onChangePassword}
+            value={password}
+            secureTextEntry
+          />
+          <TextInput
+            style={dynamicStyle.input}
+            placeholder='repeat password'
+            placeholderTextColor="gray" 
+            onChangeText={onChangeRePassword}
+            value={repassword}
+            secureTextEntry
+          />
+          <TouchableOpacity 
+            style={styles.button}
+            onPress={verify}
+            disabled={password !== repassword || !password || !repassword}
           >
-          <Text style={styles.buttonText}>Continue</Text>
-        </TouchableOpacity>
-        <Link href={"/signin"} asChild>
-          <Button title="Already have an acount?"/>
-        </Link>
+            <Text style={styles.buttonText}>Continue</Text>
+          </TouchableOpacity>
+          <Link href={"/signin"} asChild>
+            <Button title="Already have an account?" />
+          </Link>
+        </Animated.View>
       </View>
-      
     </TouchableWithoutFeedback>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
+  inner: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  title: {
+    paddingTop: 50,
+    fontSize: 45,
+    marginBottom: 20
+  },
   input: {
     borderRadius: 20,
     width: 300,
