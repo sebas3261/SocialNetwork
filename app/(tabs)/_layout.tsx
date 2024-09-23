@@ -20,7 +20,7 @@ export default function _layout() {
         screenOptions={{
             headerShown: false,
             tabBarStyle: {
-                backgroundColor: theme? 'black' : 'white'
+                backgroundColor: theme? '#151718' : 'white'
             }
         }}
     >

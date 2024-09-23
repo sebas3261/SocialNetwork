@@ -55,7 +55,7 @@ export default function Signup() {
     const contrasenaSegura = regexContrasenaSegura.test(password);
     
     if (!contrasenaSegura || !emailValido) {
-      Alert.alert("Error", "Email or password are not valid");
+      Alert.alert("Error", "Email or password are not valid, paswords must have 8 characters, Caps and a special character");
       return;
     }
 
@@ -69,7 +69,7 @@ export default function Signup() {
 
   const dynamicStyle = {
     background: {
-      backgroundColor: theme ? 'black' : 'white',
+      backgroundColor: theme ? '#151718' : 'white',
       padding: 20,
       borderRadius: 10,
       flex: 1,

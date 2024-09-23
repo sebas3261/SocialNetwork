@@ -65,7 +65,7 @@ export default function Signin() {
 
   const dynamicStyle = {
     background: {
-      backgroundColor: theme ? 'black' : 'white',
+      backgroundColor: theme ? '#151718' : 'white',
       padding: 20,
       borderRadius: 10,
       flex: 1,
