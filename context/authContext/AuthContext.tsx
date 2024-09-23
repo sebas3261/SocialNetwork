@@ -61,7 +61,12 @@ export const AuthProvider = ({ children }: any) => {
 
     const update = async(newData: newDataPropos)=>{
 
-        await setDoc(doc(db,"user",state.user.uid),{...state.user,...newData})
+        try {
+            console.log({newData, uid:state.user.uid,toSave:{...state.user,...newData} })
+            await setDoc(doc(db,"users",state.user.uid),{...newData,email:state.user.email})
+        } catch (error) {
+            console.log(error)            
+        }
 
         dispatch({ type: "LOGIN", payload: {...state.user, ...newData} });
 
