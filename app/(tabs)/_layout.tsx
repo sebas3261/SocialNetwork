@@ -5,6 +5,7 @@ import AntDesign from '@expo/vector-icons/AntDesign';
 import Feather from '@expo/vector-icons/Feather';
 import Octicons from '@expo/vector-icons/Octicons';
 import { useColorScheme } from 'react-native';
+import { DataProvider } from '@/context/dataContext/dataContext';
 
 export default function _layout() {
     const colorScheme = useColorScheme();
@@ -16,6 +17,7 @@ export default function _layout() {
 
     const iconColor = theme ? 'white' : 'black';
     return (
+        <DataProvider>
     <Tabs
         screenOptions={{
             headerShown: false,
@@ -60,6 +62,6 @@ export default function _layout() {
             }}
         />
     </Tabs>
-
+    </DataProvider>
   )
 }

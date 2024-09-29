@@ -1,7 +1,7 @@
 import { createContext, useReducer } from "react";
 import { authReducer, AuthState } from "./AuthReducer";
 import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "firebase/auth";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 import { db } from "@/utils/firebaseConfig";
 
 const defaultValues: AuthState = {
@@ -22,6 +22,9 @@ interface newDataPropos {
     username?: String;
     age?: number;
     phone?: number;
+    post?: number;
+    folowers?: number;
+    folowing?: number;
 }
 
 export const AuthContext = createContext({} as AuthContextProps);
@@ -35,14 +38,29 @@ export const AuthProvider = ({ children }: any) => {
     const login = async (email: string, password: string) => {
         try {
             const userCredential = await signInWithEmailAndPassword(auth, email, password);
-            const user = userCredential.user;
-
+            const ref = doc(db, "users", userCredential.user.uid);
+            const userDoc = await getDoc(ref);
             
-            dispatch({ type: "LOGIN", payload: user });
+            if (userDoc.exists()) {
+                const userData = userDoc.data();
+                console.log(userData);
+    
+                dispatch({ 
+                    type: "LOGIN", 
+                    payload: { 
+                        uid: userCredential.user.uid, 
+                        userData 
+                    } 
+                });
+            } else {
+                console.log("No such user data found!");
+            }
         } catch (error) {
+            console.log("Error logging in:", error);
             throw error;
         }
     };
+    
 
    
     const signUp = async (email: string, password: string) => {
