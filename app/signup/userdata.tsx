@@ -133,7 +133,10 @@ export default function userdata() {
               lastname,
               phone: Number(number),
               age: Number(age),
-              username: user
+              username: user,
+              post: 0,
+              folowers: 0,
+              folowing: 0
             })}
           >
             <Text style={styles.buttonText}>Sign up</Text>

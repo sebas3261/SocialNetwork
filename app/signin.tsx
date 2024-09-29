@@ -22,7 +22,7 @@ export default function Signin() {
     const keyboardShowListener = Keyboard.addListener(
       Platform.OS === 'ios' ? 'keyboardWillShow' : 'keyboardDidShow',
       (event: KeyboardEvent) => {
-        animateMarginBottom(event.endCoordinates.height);
+        animateMarginBottom(150);
       }
     );
     const keyboardHideListener = Keyboard.addListener(
