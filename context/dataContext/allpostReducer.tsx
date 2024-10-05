@@ -1,0 +1,18 @@
+export interface dataState{
+    user?: any,
+    isLogged: boolean
+}
+
+type ActionsProps = {type:"getPosts", payload:any}
+
+export const allpostReducer = (state:any, actions:ActionsProps)=> {
+    switch(actions.type){
+        case "getPosts":
+            return {
+                ...state,
+                posts: actions.payload, // Actualizamos los posts con el payload
+            }
+        default:
+            return state
+    }
+}

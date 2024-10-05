@@ -2,10 +2,11 @@ import { createContext, useContext, useEffect, useReducer } from "react";
 import { dataReducer } from "./dataReducer";
 import { getDownloadURL, getStorage, ref, uploadBytes, uploadString } from "firebase/storage";
 import { DefaultResponse, PostProps } from "@/interfaces/postsinterfaces";
-import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
+import { addDoc, collection, doc, getDocs, increment, query, updateDoc, where } from "firebase/firestore";
 import { db } from "@/utils/firebaseConfig";
 import { AuthContext } from "../authContext/AuthContext";
 import { Alert } from "react-native";
+import { allpostReducer } from "./allpostReducer";
 
 export interface DataState {
     posts: []; // Asegúrate de que PostProps define los campos de una publicación
@@ -21,6 +22,10 @@ interface DataContextProps {
     state: DataState,
     newPost: (newPost: PostProps) => Promise<DefaultResponse>
     getPosts: () => void; // Elimina el parámetro de getPosts
+    getAllPosts: () => Promise<{
+        id: string;
+    }[]>
+    state2: DataState
 }
 
 export const DataContext = createContext({} as DataContextProps);
@@ -28,6 +33,7 @@ export const DataContext = createContext({} as DataContextProps);
 export function DataProvider({ children }: any) {
 
     const [state, dispatch] = useReducer(dataReducer, dataStateDefault);
+    const [state2, dispatch2] = useReducer(allpostReducer, dataStateDefault);
     const { state: { user } } = useContext(AuthContext)
 
     useEffect(() => {
@@ -76,6 +82,25 @@ export function DataProvider({ children }: any) {
             return [];
         }
     }
+
+    const getAllPosts = async () => {
+
+        try{
+            const postRef = collection(db, "posts");
+            const querySnapshot = await getDocs(postRef);
+            
+            const posts = querySnapshot.docs.map(doc => ({
+                id: doc.id,
+                ...doc.data(),
+            }));
+            dispatch2({type: "getPosts", payload: posts});
+            return posts;  
+
+        }catch(error){
+            console.log(error);
+            return [];
+        }
+    }
     
     
 
@@ -83,6 +108,8 @@ export function DataProvider({ children }: any) {
     const newPost = async (newPost: PostProps): Promise<DefaultResponse> => {
         try {
             const urlImage = await uploadImage(newPost.image);
+
+            const docRef2 = doc(db, 'users', user.uid);
 
             const docRef = await addDoc(collection(db, "posts"), {
                 ...newPost,
@@ -96,6 +123,9 @@ export function DataProvider({ children }: any) {
             console.log("estos son los posts guardados",getPosts())
             console.log("Document written with ID: ", docRef.id);
             await getPosts()
+            await updateDoc(docRef2, {
+                'post': increment(1)
+            });
             return {
                 isSuccess: true,
                 message: "Creado con exito"
@@ -121,7 +151,9 @@ export function DataProvider({ children }: any) {
         value={{
             state,
             newPost,
-            getPosts
+            getPosts,
+            getAllPosts,
+            state2
         }}
     >
         {children}

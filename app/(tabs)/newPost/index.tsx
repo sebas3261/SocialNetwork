@@ -8,6 +8,7 @@ import { Image } from 'expo-image';
 import * as Location from 'expo-location';
 import { DataContext } from '@/context/dataContext/dataContext';
 
+
 export default function NewPost() {
 
     const { newPost } = useContext(DataContext);
