@@ -71,7 +71,8 @@ export default function NewPost() {
           address: locationText,
           description,
           image: currentPhoto.uri,
-          date: new Date()
+          date: new Date(),
+          user : ""
       })
       setDescription("");
       setCurrentPhoto(null);

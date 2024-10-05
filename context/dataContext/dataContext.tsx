@@ -91,6 +91,7 @@ export function DataProvider({ children }: any) {
                 username: user.email,
                 postedBy: user.uid,
                 likes: 0,
+                user: user.username
             });
             console.log("estos son los posts guardados",getPosts())
             console.log("Document written with ID: ", docRef.id);

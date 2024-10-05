@@ -6,6 +6,7 @@ export interface PostProps {
     username?: string,
     postedBy?: string,
     likes?: number,
+    user: string
 }
 
 export interface DefaultResponse {

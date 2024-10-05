@@ -69,7 +69,7 @@ export const AuthProvider = ({ children }: any) => {
             const user = userCredential.user;
 
             
-            dispatch({ type: "LOGIN", payload: user });
+            dispatch({ type: "SIGNUP", payload: user });
 
 
         } catch (error) {
@@ -86,7 +86,7 @@ export const AuthProvider = ({ children }: any) => {
             console.log(error)            
         }
 
-        dispatch({ type: "LOGIN", payload: {...state.user, ...newData} });
+        dispatch({ type: "SIGNUP", payload: {...state.user, ...newData} });
 
     }
 
