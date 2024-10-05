@@ -1,5 +1,5 @@
 import { createContext, useReducer } from "react";
-import { authReducer, AuthState } from "./AuthReducer";
+import { authReducer, AuthState } from "./authReducer";
 import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "firebase/auth";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { db } from "@/utils/firebaseConfig";
@@ -38,39 +38,24 @@ export const AuthProvider = ({ children }: any) => {
     const login = async (email: string, password: string) => {
         try {
             const userCredential = await signInWithEmailAndPassword(auth, email, password);
-            const ref = doc(db, "users", userCredential.user.uid);
-            const userDoc = await getDoc(ref);
+            const user = userCredential.user;
+
+            console.log(user)
             
-            if (userDoc.exists()) {
-                const userData = userDoc.data();
-                console.log(userData);
-    
-                dispatch({ 
-                    type: "LOGIN", 
-                    payload: { 
-                        uid: userCredential.user.uid, 
-                        userData 
-                    } 
-                });
-            } else {
-                console.log("No such user data found!");
-            }
+            dispatch({ type: "LOGIN", payload: user });
+
         } catch (error) {
             console.log("Error logging in:", error);
             throw error;
         }
     };
     
-
-   
     const signUp = async (email: string, password: string) => {
         try {
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
             const user = userCredential.user;
-
             
-            dispatch({ type: "SIGNUP", payload: user });
-
+            dispatch({ type: "LOGIN", payload: user });
 
         } catch (error) {
             throw error;
@@ -85,9 +70,6 @@ export const AuthProvider = ({ children }: any) => {
         } catch (error) {
             console.log(error)            
         }
-
-        dispatch({ type: "SIGNUP", payload: {...state.user, ...newData} });
-
     }
 
     return (

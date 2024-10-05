@@ -4,20 +4,11 @@ export interface AuthState{
     isLogged: boolean
 }
 
-type ActionsProps = {type:"LOGIN",payload: any}| {type:"SIGNUP", payload:any} | {type:"LOGOUT"}
+type ActionsProps = {type:"LOGIN",payload: any} | {type:"LOGOUT"}
 
 export const authReducer = (state:any, actions:any)=> {
     switch(actions.type){
         case "LOGIN":
-            return {
-                ...state,
-                user: {
-                    uid: actions.payload.uid,
-                    ...actions.payload.userData,
-                },
-                isLogged: true
-            }
-        case "SIGNUP":
             return {
                 ...state,
                 user: actions.payload,
