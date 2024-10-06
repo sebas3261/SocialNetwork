@@ -1,6 +1,6 @@
 import { View, Text, Image, StyleSheet, useColorScheme, TouchableOpacity } from 'react-native';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
-import { Stack, useFocusEffect } from 'expo-router';
+import { router, Stack, useFocusEffect } from 'expo-router';
 import { Toptabs } from '@/components/toptabs';
 import { DataContext } from '@/context/dataContext/dataContext';
 
@@ -90,7 +90,7 @@ export default function Profile() {
       <Text style={dynamicStyle.title}>{name}</Text>
       <Text style={dynamicStyle.bio}>Biography...</Text>
       <View style={styles.butonscont}>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={()=> router.push('/profile/edit')}>
           <View style={styles.editbut}>
             <Text style={styles.text}>Edit profile</Text>
           </View>

@@ -68,6 +68,12 @@ export default function RootLayout() {
           )
         }}
       />
+      <Stack.Screen
+        name = "edit"
+        options ={{
+          title:"Edit profile"
+        }}
+      />
     </Stack>
   );
 }
