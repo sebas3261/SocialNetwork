@@ -2,11 +2,13 @@ import { Link, Stack } from "expo-router";
 import { useColorScheme, View } from "react-native";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { Text } from "react-native";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { DataContext } from "@/context/dataContext/dataContext";
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
   const [theme, setTheme] = useState<boolean>(false);
+  
 
   useEffect(() => {
     setTheme(colorScheme === "dark");

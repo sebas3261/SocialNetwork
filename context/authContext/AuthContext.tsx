@@ -25,6 +25,7 @@ interface newDataPropos {
     post?: number;
     folowers?: number;
     folowing?: number;
+    bio?: String;
 }
 
 export const AuthContext = createContext({} as AuthContextProps);
@@ -37,24 +38,11 @@ export const AuthProvider = ({ children }: any) => {
     
     const login = async (email: string, password: string) => {
         try {
+
             const userCredential = await signInWithEmailAndPassword(auth, email, password);
-            const ref = doc(db, "users", userCredential.user.uid);
-            const userDoc = await getDoc(ref);
+            const user = userCredential.user;
             
-            if (userDoc.exists()) {
-                const userData = userDoc.data();
-                console.log(userData);
-    
-                dispatch({ 
-                    type: "LOGIN", 
-                    payload: { 
-                        uid: userCredential.user.uid, 
-                        userData 
-                    } 
-                });
-            } else {
-                console.log("No such user data found!");
-            }
+            dispatch({ type: "LOGIN", payload: user });
         } catch (error) {
             console.log("Error logging in:", error);
             throw error;
@@ -69,7 +57,7 @@ export const AuthProvider = ({ children }: any) => {
             const user = userCredential.user;
 
             
-            dispatch({ type: "SIGNUP", payload: user });
+            dispatch({ type: "LOGIN", payload: user });
 
 
         } catch (error) {
@@ -86,7 +74,7 @@ export const AuthProvider = ({ children }: any) => {
             console.log(error)            
         }
 
-        dispatch({ type: "SIGNUP", payload: {...state.user, ...newData} });
+        dispatch({ type: "LOGIN", payload: {...state.user, ...newData} });
 
     }
 

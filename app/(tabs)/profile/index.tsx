@@ -1,25 +1,34 @@
-import { View, Text, Image, StyleSheet, useColorScheme } from 'react-native';
-import React, { useContext, useEffect, useState } from 'react';
-import { AuthContext } from '@/context/authContext/AuthContext'; // Asegúrate de importar correctamente el contexto
-import { Stack } from 'expo-router';
+import { View, Text, Image, StyleSheet, useColorScheme, TouchableOpacity } from 'react-native';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
+import { Stack, useFocusEffect } from 'expo-router';
 import { Toptabs } from '@/components/toptabs';
+import { DataContext } from '@/context/dataContext/dataContext';
 
 export default function Profile() {
-  const { state } = useContext(AuthContext); // Accediendo al estado del contexto
-  const user = state.user.username|| "Anonymous";
-  const posts = state.user.post?.toString() || "-1";
-  const folowers = state.user.folowers?.toString() || "-1";
-  const folowing = state.user.folowing?.toString() || "-1";
+  const { stateUser: { user }, getUserinfo } = useContext(DataContext); // Accediendo al estado del contexto
   const colorScheme = useColorScheme();
   const [theme, setTheme] = useState<boolean>(false);
+
+  // Comprobación condicional para asegurar que user existe antes de acceder a sus propiedades
+  const name = user?.name ? user.name.toString() : "Anonymous";
+  const posts = user?.post ? user.post.toString() : "0";
+  const followers = user?.folowers ? user.folowers.toString() : "0";
+  const following = user?.folowing ? user.folowing.toString() : "0";
 
   useEffect(() => {
     setTheme(colorScheme === "dark");
   }, [colorScheme]);
 
+  useFocusEffect(
+    useCallback(() => {
+      getUserinfo();
+      
+    }, []) // El array de dependencias vacío asegura que se llame cada vez que la pantalla se enfoca
+  );
+
   const iconColor = theme ? "white" : "black";
   
-  let profile = "@/assets/images/whiteprofile.png"; // Ruta a la imagen del perfil
+  const profileImage =  require('@/assets/images/whiteprofile.png'); // Ajuste dinámico de la imagen según el tema
 
   const dynamicStyle = StyleSheet.create({
     background: {
@@ -31,10 +40,10 @@ export default function Profile() {
       fontWeight: "bold",
       marginLeft: 20,
       marginTop: -10,
-      color: theme? 'white' : 'black',
+      color: theme ? 'white' : 'black',
     },
     or: {
-      color: theme? 'white' : 'black',
+      color: theme ? 'white' : 'black',
     },
     input: {
       borderRadius: 20,
@@ -43,35 +52,56 @@ export default function Profile() {
       margin: 12,
       borderWidth: 1,
       padding: 10,
-      borderColor: theme? 'white' : 'black',
-      color: theme? 'white' : 'black',
+      borderColor: theme ? 'white' : 'black',
+      color: theme ? 'white' : 'black',
     },
     bio: {
       marginLeft: 20,
-      color: theme? 'white' : 'black',
+      color: theme ? 'white' : 'black',
     }
   });
+
+  // Render condicional para mostrar solo si `user` está definido
+  if (!user) {
+    return (
+      <View style={dynamicStyle.background}>
+        <Text style={dynamicStyle.title}>Cargando...</Text>
+      </View>
+    );
+  }
 
   return (
     <View style={dynamicStyle.background}>
       <View style={styles.container}>
-        <Image style={styles.image} source={require(profile)} />
+        <Image style={styles.image} source={profileImage} />
         <View style={styles.data}>
           <Text style={dynamicStyle.or}>{posts}</Text>
           <Text style={dynamicStyle.or}>posts</Text>
         </View>
         <View style={styles.data}>
-          <Text style={dynamicStyle.or}>{folowers}</Text>
+          <Text style={dynamicStyle.or}>{followers}</Text>
           <Text style={dynamicStyle.or}>followers</Text>
         </View>
         <View style={styles.data}>
-          <Text style={dynamicStyle.or}>{folowing}</Text>
+          <Text style={dynamicStyle.or}>{following}</Text>
           <Text style={dynamicStyle.or}>following</Text>
         </View>
       </View>
-      <Text style={dynamicStyle.title}>{user}</Text>
+      <Text style={dynamicStyle.title}>{name}</Text>
       <Text style={dynamicStyle.bio}>Biography...</Text>
-      <Toptabs/>
+      <View style={styles.butonscont}>
+        <TouchableOpacity>
+          <View style={styles.editbut}>
+            <Text style={styles.text}>Edit profile</Text>
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity>
+          <View style={styles.editbut}>
+            <Text style={styles.text}>Share profile</Text>
+          </View>
+        </TouchableOpacity>
+      </View>
+      <Toptabs />
     </View>
   );
 }
@@ -101,4 +131,27 @@ const styles = StyleSheet.create({
     marginLeft: 20,
     marginTop: -10,
   },
+  butonscont:{
+    display: 'flex',
+    flexDirection: "row",
+    alignItems: 'center',
+    justifyContent: "space-around",
+    padding: 10
+  },
+  editbut:{
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#F3F5F7",
+    paddingLeft: 40,
+    paddingRight: 40,
+    paddingTop: 5,
+    paddingBottom: 5,
+    borderRadius: 10,
+    height: 40,
+    width: 180
+  },
+  text: {
+    fontWeight: "700"
+  }
 });

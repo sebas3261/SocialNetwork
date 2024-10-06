@@ -15,6 +15,7 @@ export default function _layout() {
         setTheme(colorScheme === "dark");
       }, [colorScheme]);
 
+    
     const iconColor = theme ? 'white' : 'black';
     return (
         <DataProvider>

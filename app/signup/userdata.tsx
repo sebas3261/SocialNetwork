@@ -136,7 +136,8 @@ export default function userdata() {
               username: user,
               post: 0,
               folowers: 0,
-              folowing: 0
+              folowing: 0,
+              bio: ""
             })}
           >
             <Text style={styles.buttonText}>Sign up</Text>

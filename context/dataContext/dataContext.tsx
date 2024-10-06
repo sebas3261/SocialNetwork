@@ -2,11 +2,11 @@ import { createContext, useContext, useEffect, useReducer } from "react";
 import { dataReducer } from "./dataReducer";
 import { getDownloadURL, getStorage, ref, uploadBytes, uploadString } from "firebase/storage";
 import { DefaultResponse, PostProps } from "@/interfaces/postsinterfaces";
-import { addDoc, collection, doc, getDocs, increment, query, updateDoc, where } from "firebase/firestore";
+import { addDoc, collection, doc, getDoc, getDocs, increment, query, updateDoc, where } from "firebase/firestore";
 import { db } from "@/utils/firebaseConfig";
 import { AuthContext } from "../authContext/AuthContext";
-import { Alert } from "react-native";
 import { allpostReducer } from "./allpostReducer";
+import { AuthState, useInfoReducer } from "./userInfoReducer";
 
 export interface DataState {
     posts: []; // Asegúrate de que PostProps define los campos de una publicación
@@ -18,6 +18,8 @@ const dataStateDefault = {
 
 }
 
+
+
 interface DataContextProps {
     state: DataState,
     newPost: (newPost: PostProps) => Promise<DefaultResponse>
@@ -26,6 +28,8 @@ interface DataContextProps {
         id: string;
     }[]>
     state2: DataState
+    getUserinfo: () => Promise<void>
+    stateUser: AuthState
 }
 
 export const DataContext = createContext({} as DataContextProps);
@@ -34,6 +38,7 @@ export function DataProvider({ children }: any) {
 
     const [state, dispatch] = useReducer(dataReducer, dataStateDefault);
     const [state2, dispatch2] = useReducer(allpostReducer, dataStateDefault);
+    const [stateUser, dispatchUser] = useReducer(useInfoReducer, dataStateDefault)
     const { state: { user } } = useContext(AuthContext)
 
     useEffect(() => {
@@ -56,6 +61,20 @@ export function DataProvider({ children }: any) {
             return url?? "";
         } catch (error) {
             console.log(error)
+        }
+    }
+
+    const getUserinfo = async () =>{
+        try{
+            const ref = doc(db, "users", user.uid);
+            const userDoc = await getDoc(ref);
+
+            const userData = userDoc.data();
+
+            dispatchUser({type: "GET", payload: userData})
+        }
+        catch(error){
+            console.log(error);
         }
     }
 
@@ -118,7 +137,7 @@ export function DataProvider({ children }: any) {
                 username: user.email,
                 postedBy: user.uid,
                 likes: 0,
-                user: user.username
+                user: stateUser.user.username
             });
             console.log("estos son los posts guardados",getPosts())
             console.log("Document written with ID: ", docRef.id);
@@ -153,7 +172,9 @@ export function DataProvider({ children }: any) {
             newPost,
             getPosts,
             getAllPosts,
-            state2
+            state2,
+            getUserinfo,
+            stateUser
         }}
     >
         {children}

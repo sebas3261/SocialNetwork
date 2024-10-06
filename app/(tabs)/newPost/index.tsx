@@ -11,7 +11,7 @@ import { DataContext } from '@/context/dataContext/dataContext';
 
 export default function NewPost() {
 
-    const { newPost } = useContext(DataContext);
+    const { newPost, getUserinfo } = useContext(DataContext)
     const [isVisible, setIsVisble] = useState(false);
     const [currentPhoto, setCurrentPhoto] = useState(undefined as any);
     const [locationText, setLocationText] = useState("")
@@ -75,6 +75,7 @@ export default function NewPost() {
           date: new Date(),
           user : ""
       })
+      await getUserinfo();
       setDescription("");
       setCurrentPhoto(null);
       setLocationText("");
