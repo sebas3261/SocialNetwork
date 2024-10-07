@@ -73,7 +73,7 @@ export default function Profile() {
   return (
     <View style={dynamicStyle.background}>
       <View style={styles.container}>
-        <Image style={styles.image} source={profileImage} />
+        <Image style={styles.image} source={{ uri: user.Image }||profileImage} />
         <View style={styles.data}>
           <Text style={dynamicStyle.or}>{posts}</Text>
           <Text style={dynamicStyle.or}>posts</Text>

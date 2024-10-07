@@ -16,7 +16,8 @@ export default function EditProfile() {
   const [isVisible, setIsVisble] = useState(false);
   const [currentPhoto, setCurrentPhoto] = useState(undefined as any);
   const {
-    stateUser: { user }, updateUser
+    stateUser: { user },
+    updateUser,
   } = useContext(DataContext);
   const [name, setName] = useState("");
   const [lastname, setLastname] = useState("");
@@ -25,19 +26,23 @@ export default function EditProfile() {
   const [isUser, setisUser] = useState(false);
   const [bio, setBio] = useState("");
   const [isBio, setIsBio] = useState(false);
+  const [isPic, setIsPic] = useState(false);
 
-  const update = async (type: String, data: any) =>{
-    try{
-        await updateUser(type,data)
-    }catch(error){
-        console.log(error);
+  const update = async (type: String, data: any) => {
+    try {
+      await updateUser(type, data);
+    } catch (error) {
+      console.log(error);
     }
-  }
+  };
 
   return (
     <View style={styles.all}>
       <View style={styles.container}>
-        <TouchableOpacity onPress={() => setIsVisble(true)}>
+        <TouchableOpacity onPress={() => {
+        setIsVisble(true)
+        setIsPic(true)
+    }}>
           <View style={styles.photoButton}>
             {currentPhoto && currentPhoto.uri ? (
               <Image
@@ -69,7 +74,10 @@ export default function EditProfile() {
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
             <View style={styles.head}>
-              <TouchableOpacity style={styles.leftButtonContainer} onPress={() => setisName(false)}>
+              <TouchableOpacity
+                style={styles.leftButtonContainer}
+                onPress={() => setisName(false)}
+              >
                 <Text style={styles.closeButton}>&lt;</Text>
               </TouchableOpacity>
               <Text style={styles.title}>Edit Name</Text>
@@ -91,17 +99,19 @@ export default function EditProfile() {
               onChangeText={setLastname}
             />
 
-            <TouchableOpacity style={styles.doneButton} onPress={() => {
-                if(name != ""){
-                    update("name", name)
+            <TouchableOpacity
+              style={styles.doneButton}
+              onPress={() => {
+                if (name != "") {
+                  update("name", name);
                 }
-                if(lastname != ""){
-                    update("lastname", lastname)
-                } 
-                setisName(false)
-            }}>
-              <Text style={styles.doneButtonText} 
-              >Done</Text>
+                if (lastname != "") {
+                  update("lastname", lastname);
+                }
+                setisName(false);
+              }}
+            >
+              <Text style={styles.doneButtonText}>Done</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -111,7 +121,10 @@ export default function EditProfile() {
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
             <View style={styles.head}>
-              <TouchableOpacity style={styles.leftButtonContainer} onPress={() => setisUser(false)}>
+              <TouchableOpacity
+                style={styles.leftButtonContainer}
+                onPress={() => setisUser(false)}
+              >
                 <Text style={styles.closeButton}>&lt;</Text>
               </TouchableOpacity>
               <Text style={styles.title}>Edit User</Text>
@@ -125,12 +138,15 @@ export default function EditProfile() {
               onChangeText={setNewUser}
             />
 
-            <TouchableOpacity style={styles.doneButton} onPress={() => {
-                if(Newuser != ""){
-                    update("username", Newuser)
+            <TouchableOpacity
+              style={styles.doneButton}
+              onPress={() => {
+                if (Newuser != "") {
+                  update("username", Newuser);
                 }
-                setisUser(false)
-            }}>
+                setisUser(false);
+              }}
+            >
               <Text style={styles.doneButtonText}>Done</Text>
             </TouchableOpacity>
           </View>
@@ -141,7 +157,10 @@ export default function EditProfile() {
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
             <View style={styles.head}>
-              <TouchableOpacity style={styles.leftButtonContainer} onPress={() => setIsBio(false)}>
+              <TouchableOpacity
+                style={styles.leftButtonContainer}
+                onPress={() => setIsBio(false)}
+              >
                 <Text style={styles.closeButton}>&lt;</Text>
               </TouchableOpacity>
               <Text style={styles.title}>Edit Bio</Text>
@@ -155,12 +174,15 @@ export default function EditProfile() {
               onChangeText={setBio}
             />
 
-            <TouchableOpacity style={styles.doneButton} onPress={() => {
-                if(bio != ""){
-                    update("bio",bio)
+            <TouchableOpacity
+              style={styles.doneButton}
+              onPress={() => {
+                if (bio != "") {
+                  update("bio", bio);
                 }
-                setIsBio(false)
-            }}>
+                setIsBio(false);
+              }}
+            >
               <Text style={styles.doneButtonText}>Done</Text>
             </TouchableOpacity>
           </View>
@@ -189,6 +211,15 @@ export default function EditProfile() {
           <Text style={styles.text}>{user.bio || "No bio available"}</Text>
         </View>
       </TouchableOpacity>
+
+      {isPic && (
+        <TouchableOpacity style={styles.doneButton} onPress={()=>{
+            update("Image",currentPhoto.uri)
+            setIsPic(false)
+        }}>
+          <Text style={styles.doneButtonText}>Upload Profile pic</Text>
+        </TouchableOpacity>
+      )}
     </View>
   );
 }
@@ -296,14 +327,15 @@ const styles = StyleSheet.create({
     color: "#0798F2",
   },
   head: {
-    width: "100%", 
-    flexDirection: "row",  // Para alinear horizontalmente
-    justifyContent: "center",  // Centrar el contenido
+    width: "100%",
+    flexDirection: "row", // Para alinear horizontalmente
+    justifyContent: "center", // Centrar el contenido
     alignItems: "center",
     marginBottom: 20,
   },
-  leftButtonContainer: {  // Nuevo estilo para el botón de regresar
+  leftButtonContainer: {
+    // Nuevo estilo para el botón de regresar
     position: "absolute",
     left: 0,
-  }
+  },
 });
