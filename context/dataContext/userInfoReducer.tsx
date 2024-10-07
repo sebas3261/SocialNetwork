@@ -12,7 +12,8 @@ interface newDataPropos {
     post?: number;
     folowers?: number;
     folowing?: number;
-    bio: String;
+    bio?: String;
+    Image?: String;
 }
 
 type ActionsProps = {type:"GET",payload: newDataPropos}

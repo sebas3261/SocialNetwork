@@ -30,6 +30,7 @@ interface DataContextProps {
     state2: DataState
     getUserinfo: () => Promise<void>
     stateUser: AuthState
+    updateUser: (type: String, data: any) => Promise<void>
 }
 
 export const DataContext = createContext({} as DataContextProps);
@@ -165,6 +166,44 @@ export function DataProvider({ children }: any) {
     const deletePost = async () => {
     }
 
+    const uploadUserImage = async (uri: string) => {
+        const storage = getStorage();
+        const storageRef = ref(storage, 'User/'+ user.uid);
+        try {
+            const response = await fetch(uri);
+            const blob = await response.blob();
+            const snapshot =await uploadBytes(storageRef,blob);
+            const url = await getDownloadURL(storageRef);
+            console.log('Uploaded a raw string!');
+            console.log({
+                snapshot
+            })
+            return url?? "";
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const updateUser = async(type: String, data:any) => {
+        const docRef = doc(db, 'users', user.uid);
+        try{
+        if(type == "Image"){
+            const urlImage = await uploadUserImage(data);
+            await updateDoc(docRef, {
+                "Image": urlImage
+            });
+        }
+        else{
+            await updateDoc(docRef, {
+                [type.toString()]: data.toString()
+            });
+        }
+        }catch(error){
+            console.log(error)
+        }
+        getUserinfo()
+    }
+
 
     return <DataContext.Provider
         value={{
@@ -174,7 +213,8 @@ export function DataProvider({ children }: any) {
             getAllPosts,
             state2,
             getUserinfo,
-            stateUser
+            stateUser,
+            updateUser
         }}
     >
         {children}

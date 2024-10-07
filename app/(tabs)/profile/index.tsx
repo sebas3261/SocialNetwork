@@ -88,7 +88,7 @@ export default function Profile() {
         </View>
       </View>
       <Text style={dynamicStyle.title}>{name}</Text>
-      <Text style={dynamicStyle.bio}>Biography...</Text>
+      <Text style={dynamicStyle.bio}>{user.bio || "No bio available"}</Text>
       <View style={styles.butonscont}>
         <TouchableOpacity onPress={()=> router.push('/profile/edit')}>
           <View style={styles.editbut}>
