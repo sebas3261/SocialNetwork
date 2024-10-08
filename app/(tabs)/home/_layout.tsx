@@ -1,18 +1,37 @@
 import { Link, Stack } from "expo-router";
-import { useColorScheme, View } from "react-native";
+import { useColorScheme, View, ActivityIndicator} from "react-native";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { Text } from "react-native";
 import { useContext, useEffect, useState } from "react";
-import { DataContext } from "@/context/dataContext/dataContext";
+import * as Font from 'expo-font';
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
   const [theme, setTheme] = useState<boolean>(false);
+  const [fontsLoaded, setFontsLoaded] = useState(false);
   
+  useEffect(() => {
+    loadFonts();
+  }, []); 
 
   useEffect(() => {
     setTheme(colorScheme === "dark");
   }, [colorScheme]);
+
+  const loadFonts = async () => {
+    try {
+      await Font.loadAsync({
+        "IG": require('../../../assets/fonts/ig.otf')
+      });
+      setFontsLoaded(true);
+    } catch (error) {
+      console.log("Error loading font: ", error);
+    }
+  };
+
+  if (!fontsLoaded) {
+    return <ActivityIndicator />;
+  }
 
   const iconColor = theme ? "white" : "black";
   return (
@@ -28,6 +47,7 @@ export default function RootLayout() {
                 fontSize: 35,
                 fontWeight: "bold",
                 color: iconColor,
+                fontFamily: "IG",
               }}
             >
               Instagram

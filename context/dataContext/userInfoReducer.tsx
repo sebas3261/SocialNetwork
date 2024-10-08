@@ -16,7 +16,7 @@ interface newDataPropos {
     Image?: String;
 }
 
-type ActionsProps = {type:"GET",payload: newDataPropos}
+type ActionsProps = {type:"GET",payload: newDataPropos} | {type:"LOGOUT"}
 
 export const useInfoReducer = (state:any, actions:any)=> {
     switch(actions.type){
@@ -24,6 +24,11 @@ export const useInfoReducer = (state:any, actions:any)=> {
             return {
                 ...state,
                 user: actions.payload,
+            }
+            case "LOGOUT":
+            return{
+                ...state,
+                user: undefined
             }
         default:
             return state

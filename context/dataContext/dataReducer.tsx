@@ -3,7 +3,7 @@ export interface dataState{
     isLogged: boolean
 }
 
-type ActionsProps = {type:"getMyPosts", payload:any}
+type ActionsProps = {type:"getMyPosts", payload:any} | {type:"LOGOUT"}
 
 export const dataReducer = (state:any, actions:ActionsProps)=> {
     switch(actions.type){
@@ -11,6 +11,12 @@ export const dataReducer = (state:any, actions:ActionsProps)=> {
             return {
                 ...state,
                 posts: actions.payload, // Actualizamos los posts con el payload
+            }
+            case "LOGOUT":
+            return{
+                ...state,
+                user: undefined,
+                isLogged: false
             }
         default:
             return state

@@ -14,6 +14,7 @@ interface AuthContextProps {
     login: (email: string, password: string) => Promise<void>;
     signUp: (email: string, password: string) => Promise<void>;
     update: (newData: newDataPropos) => Promise<void>;
+    logout: () => Promise<void>
 }
 
 interface newDataPropos {
@@ -75,7 +76,11 @@ export const AuthProvider = ({ children }: any) => {
         }
 
         dispatch({ type: "LOGIN", payload: {...state.user, ...newData} });
+    }
 
+    const logout = async()=>{
+        dispatch({ type: "LOGOUT" });
+        console.log(state.user)
     }
 
     return (
@@ -84,7 +89,8 @@ export const AuthProvider = ({ children }: any) => {
                 state,
                 login,
                 signUp,
-                update
+                update,
+                logout
             }}
         >
             {children}

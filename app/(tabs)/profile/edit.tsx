@@ -15,6 +15,7 @@ import { DataContext } from "@/context/dataContext/dataContext";
 export default function EditProfile() {
   const [isVisible, setIsVisble] = useState(false);
   const [currentPhoto, setCurrentPhoto] = useState(undefined as any);
+  const [isShowFoto, setIsShowFoto] = useState(true);
   const {
     stateUser: { user },
     updateUser,
@@ -39,12 +40,17 @@ export default function EditProfile() {
   return (
     <View style={styles.all}>
       <View style={styles.container}>
-        <TouchableOpacity onPress={() => {
-        setIsVisble(true)
-        setIsPic(true)
-    }}>
+        <TouchableOpacity
+          onPress={() => {
+            setIsVisble(true);
+            setIsPic(true);
+            setIsShowFoto(false);
+          }}
+        >
           <View style={styles.photoButton}>
-            {currentPhoto && currentPhoto.uri ? (
+            {isShowFoto && user.Image ?(
+              <Image style={styles.profileImage} source={{ uri: user.Image }} />
+            ) : currentPhoto && currentPhoto.uri ? (
               <Image
                 style={styles.profileImage}
                 source={{ uri: currentPhoto.uri }}
@@ -57,7 +63,13 @@ export default function EditProfile() {
           </View>
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => setIsVisble(true)}>
+        <TouchableOpacity
+          onPress={() => {
+            setIsVisble(true);
+            setIsPic(true);
+            setIsShowFoto(false);
+          }}
+        >
           <Text style={styles.editText}>Edit picture</Text>
         </TouchableOpacity>
 
@@ -213,10 +225,13 @@ export default function EditProfile() {
       </TouchableOpacity>
 
       {isPic && (
-        <TouchableOpacity style={styles.doneButton} onPress={()=>{
-            update("Image",currentPhoto.uri)
-            setIsPic(false)
-        }}>
+        <TouchableOpacity
+          style={styles.doneButton}
+          onPress={() => {
+            update("Image", currentPhoto.uri);
+            setIsPic(false);
+          }}
+        >
           <Text style={styles.doneButtonText}>Upload Profile pic</Text>
         </TouchableOpacity>
       )}
